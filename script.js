@@ -1,20 +1,15 @@
 document.getElementById("submit").addEventListener("click", function() {
-    let player1 = document.getElementById("player1").value.trim();
-    let player2 = document.getElementById("player2").value.trim();
+    player1Name = document.getElementById("player1").value.trim();
+    player2Name = document.getElementById("player2").value.trim();
 
-    if (player1 === "" || player2 === "") {
-        alert("Please enter names for both players!");
+    if (player1Name === "" || player2Name === "") {
+        alert("Please enter names for both players.");
         return;
     }
 
-    // Hide player input section
-    document.querySelector(".container").style.display = "none";
-
-    // Show the game board
+    document.querySelector(".message").textContent = `${player1Name}, you're up!`;
     document.getElementById("game-board").classList.remove("hidden");
-
-    // Set player names
-    document.getElementById("turn-indicator").textContent = `${player1}'s Turn (X)`;
+    document.querySelector(".container").classList.add("hidden");
 
     startGame();
 });
@@ -31,6 +26,9 @@ function startGame() {
     });
 
     document.getElementById("restart").classList.add("hidden");
+
+    // Set initial turn message
+    document.getElementById("turn-indicator").textContent = `${player1Name}, you're up!`;
 }
 
 function handleCellClick(event) {
@@ -41,20 +39,26 @@ function handleCellClick(event) {
     cell.textContent = currentPlayer;
 
     if (checkWinner()) {
-        setTimeout(() => alert(`${currentPlayer} congratulations you won!`), 100);
+        let winnerName = currentPlayer === "X" ? player1Name : player2Name;
+        document.querySelector(".message").textContent = `${winnerName}, congratulations you won!`;
+        setTimeout(() => alert(`${winnerName}, congratulations you won!`), 100);
         endGame();
         return;
     }
 
     if ([...cells].every(cell => cell.textContent !== "")) {
+        document.querySelector(".message").textContent = "It's a draw!";
         setTimeout(() => alert("It's a draw!"), 100);
         endGame();
         return;
     }
 
+    // Switch turns
     currentPlayer = currentPlayer === "X" ? "O" : "X";
-    document.getElementById("turn-indicator").textContent = 
-        currentPlayer === "X" ? "Player 1's Turn (X)" : "Player 2's Turn (O)";
+    let nextPlayerName = currentPlayer === "X" ? player1Name : player2Name;
+
+    // Update turn message
+    document.getElementById("turn-indicator").textContent = `${nextPlayerName}, you're up!`;
 }
 
 function checkWinner() {
@@ -79,5 +83,5 @@ function endGame() {
 document.getElementById("restart").addEventListener("click", function() {
     currentPlayer = "X";
     startGame();
-    document.getElementById("turn-indicator").textContent = "Player 1's Turn (X)";
+    document.getElementById("turn-indicator").textContent = `${player1Name}, you're up!`;
 });
