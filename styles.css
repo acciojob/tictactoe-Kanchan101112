@@ -12,6 +12,16 @@ body {
 .container {
     margin-bottom: 20px;
 }
+.message {
+    font-family: "Arial", sans-serif; /* Font style */
+    font-size: 28px; /* Size of the text */
+    font-weight: bold; /* Make text bold */
+    color: #ff69b4; /* Light pink color */
+    text-align: center; /* Center the text */
+    margin-bottom: 20px; /* Space below the title */
+    text-transform: uppercase; /* Make text uppercase */
+    letter-spacing: 2px; /* Add spacing between letters */
+   }
 
 .board {
     display: grid;
