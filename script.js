@@ -1,6 +1,6 @@
 document.getElementById("submit").addEventListener("click", function() {
     let player1 = document.getElementById("player1").value.trim();
-    let player2 = document.getElementById("player-2").value.trim();
+    let player2 = document.getElementById("player2").value.trim();
 
     if (player1 === "" || player2 === "") {
         alert("Please enter names for both players!");
@@ -41,7 +41,7 @@ function handleCellClick(event) {
     cell.textContent = currentPlayer;
 
     if (checkWinner()) {
-        setTimeout(() => alert(`${currentPlayer} wins!`), 100);
+        setTimeout(() => alert(`${currentPlayer} congratulations you won!`), 100);
         endGame();
         return;
     }
