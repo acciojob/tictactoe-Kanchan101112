@@ -2,7 +2,6 @@ const player1Input = document.getElementById('player1');
 const player2Input = document.getElementById('player2');
 const submitButton = document.getElementById('submit');
 const gameBoard = document.getElementById('game-board');
-const turnIndicator = document.getElementById('turn-indicator');
 const messageDiv = document.querySelector('.message');
 const cells = document.querySelectorAll('.cell');
 const restartButton = document.getElementById('restart'); // <-- added
@@ -27,7 +26,7 @@ submitButton.addEventListener('click', function() {
         // Show the game board
         gameBoard.classList.remove('hidden');
         // Update the message to show whose turn it is
-        turnIndicator.textContent = `${player1Name}, you're up!`;
+        messageDiv.textContent = `${player1Name}, you're up!`;
         gameActive = true;
     } else {
         alert("Please enter names for both players.");
@@ -36,7 +35,7 @@ submitButton.addEventListener('click', function() {
 
 cells.forEach((cell, index) => {
     cell.addEventListener('click', function() {
-        // Check if the cell is already filled
+        //Check if the cell is already filled
         if (boardState[index] === '') {
             // Update the board state
             boardState[index] = currentPlayer;
@@ -57,7 +56,7 @@ messageDiv.textContent = `${winnerName}, congratulations you win! 🎉`;
 		   }else {
                 // Switch players
                 currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
-                turnIndicator.textContent = `${currentPlayer === 'X' ? player1Name : player2Name}, you're up!`;
+                messageDiv.textContent = `${currentPlayer === 'X' ? player1Name : player2Name}, you're up!`;
             }
         }
     });
@@ -100,7 +99,6 @@ restartButton.addEventListener('click', function() {
     // Reset turn
     currentPlayer = 'X';
     gameActive = true;
-    messageDiv.textContent = '';
-    turnIndicator.textContent = `${player1Name}, you're up!`;
+    messageDiv.textContent = `${player1Name}, you're up!`;
     hideRestartButton();
 });
