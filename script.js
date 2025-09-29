@@ -1,87 +1,106 @@
-document.getElementById("submit").addEventListener("click", function() {
-    player1Name = document.getElementById("player1").value.trim();
-    player2Name = document.getElementById("player2").value.trim();
+const player1Input = document.getElementById('player1');
+const player2Input = document.getElementById('player2');
+const submitButton = document.getElementById('submit');
+const gameBoard = document.getElementById('game-board');
+const turnIndicator = document.getElementById('turn-indicator');
+const messageDiv = document.querySelector('.message');
+const cells = document.querySelectorAll('.cell');
+const restartButton = document.getElementById('restart'); // <-- added
 
-    if (player1Name === "" || player2Name === "") {
+
+let player1Name = '';
+let player2Name = '';
+let currentPlayer = 'X'; // Start with Player 1 (X)
+const boardState = ['', '', '', '', '', '', '', '', '']; // 3x3 grid
+let gameActive = false;
+
+// Add event listener to the submit button
+submitButton.addEventListener('click', function() {
+    // Get the player names
+    player1Name = player1Input.value.trim();
+    player2Name = player2Input.value.trim();
+
+    // Check if both players have entered their names
+    if (player1Name && player2Name) {
+        // Hide the input section
+        document.querySelector('.container').style.display = 'none';
+        // Show the game board
+        gameBoard.classList.remove('hidden');
+        // Update the message to show whose turn it is
+        turnIndicator.textContent = `${player1Name}, you're up!`;
+        gameActive = true;
+    } else {
         alert("Please enter names for both players.");
-        return;
     }
-
-    document.querySelector(".message").textContent = `${player1Name}, you're up!`;
-    document.getElementById("game-board").classList.remove("hidden");
-    document.querySelector(".container").classList.add("hidden");
-
-    startGame();
 });
 
-let currentPlayer = "X";
-let cells = document.querySelectorAll(".cell");
-let player1Name = "";
-let player2Name = "";
+cells.forEach((cell, index) => {
+    cell.addEventListener('click', function() {
+        // Check if the cell is already filled
+        if (boardState[index] === '') {
+            // Update the board state
+            boardState[index] = currentPlayer;
+            cell.textContent = currentPlayer; // Display the current player's symbol
 
-function startGame() {
-    cells.forEach(cell => {
-        cell.textContent = "";  // Clear board
-        cell.addEventListener("click", handleCellClick);
+            // Check for a win or a draw
+           if (checkWin()) {
+            const winnerName = currentPlayer === 'X' ? player1Name : player2Name;
+    alert(`${winnerName}, congratulations you win! 🎉`); // <- use alert to test
+            gameActive = false;
+            cells.forEach(cell => cell.style.pointerEvents = 'none');
+            showRestartButton();
+        } else if (!boardState.includes('')) {
+            messageDiv.textContent = "It's a draw!";
+            gameActive = false;
+            showRestartButton();
+			   
+		   }else {
+                // Switch players
+                currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+                turnIndicator.textContent = `${currentPlayer === 'X' ? player1Name : player2Name}, you're up!`;
+            }
+        }
     });
+});
 
-    document.getElementById("restart").classList.add("hidden");
-
-    // Set initial turn message
-    document.getElementById("turn-indicator").textContent = `${player1Name}, you're up!`;
-}
-
-function handleCellClick(event) {
-    const cell = event.target;
-
-    if (cell.textContent !== "") return; // Prevent overwriting moves
-
-    cell.textContent = currentPlayer;
-
-    if (checkWinner()) {
-        let winnerName = currentPlayer === "X" ? player1Name : player2Name;
-        document.querySelector(".message").textContent = `${winnerName}, congratulations you won!`;
-        setTimeout(() => alert(`${winnerName}, congratulations you won!`), 100);
-        endGame();
-        return;
-    }
-
-    if ([...cells].every(cell => cell.textContent !== "")) {
-        document.querySelector(".message").textContent = "It's a draw!";
-        setTimeout(() => alert("It's a draw!"), 100);
-        endGame();
-        return;
-    }
-
-    // Switch turns
-    currentPlayer = currentPlayer === "X" ? "O" : "X";
-    let nextPlayerName = currentPlayer === "X" ? player1Name : player2Name;
-
-    // Update turn message
-    document.getElementById("turn-indicator").textContent = `${nextPlayerName}, you're up!`;
-}
-
-function checkWinner() {
-    const winningCombos = [
-        [0, 1, 2], [3, 4, 5], [6, 7, 8], // Rows
-        [0, 3, 6], [1, 4, 7], [2, 5, 8], // Columns
-        [0, 4, 8], [2, 4, 6]             // Diagonals
+function checkWin() {
+    const winningCombinations = [
+        [0, 1, 2], // Row 1
+        [3, 4, 5], // Row 2
+        [6, 7, 8], // Row 3
+        [0, 3, 6], // Column 1
+        [1, 4, 7], // Column 2
+        [2, 5, 8], // Column 3
+        [0, 4, 8], // Diagonal
+        [2, 4, 6]  // Diagonal
     ];
 
-    return winningCombos.some(combo => {
-        return cells[combo[0]].textContent !== "" &&
-               cells[combo[0]].textContent === cells[combo[1]].textContent &&
-               cells[combo[1]].textContent === cells[combo[2]].textContent;
+    return winningCombinations.some(combination => {
+        const [a, b, c] = combination;
+        return boardState[a] && boardState[a] === boardState[b] && boardState[a] === boardState[c];
     });
 }
-
-function endGame() {
-    cells.forEach(cell => cell.removeEventListener("click", handleCellClick));
-    document.getElementById("restart").classList.remove("hidden");
+// Restart game functions
+function showRestartButton() {
+    restartButton.classList.remove('hidden');
 }
 
-document.getElementById("restart").addEventListener("click", function() {
-    currentPlayer = "X";
-    startGame();
-    document.getElementById("turn-indicator").textContent = `${player1Name}, you're up!`;
+function hideRestartButton() {
+    restartButton.classList.add('hidden');
+}
+
+restartButton.addEventListener('click', function() {
+    // Reset board state
+    for (let i = 0; i < boardState.length; i++) boardState[i] = '';
+    // Clear UI
+    cells.forEach(cell => {
+        cell.textContent = '';
+        cell.style.pointerEvents = 'auto';
+    });
+    // Reset turn
+    currentPlayer = 'X';
+    gameActive = true;
+    messageDiv.textContent = '';
+    turnIndicator.textContent = `${player1Name}, you're up!`;
+    hideRestartButton();
 });
