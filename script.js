@@ -9,7 +9,7 @@ const restartButton = document.getElementById('restart'); // <-- added
 
 let player1Name = '';
 let player2Name = '';
-let currentPlayer = 'X'; // Start with Player 1 (X)
+let currentPlayer = 'x'; // Start with Player 1 (X)
 const boardState = ['', '', '', '', '', '', '', '', '']; // 3x3 grid
 let gameActive = false;
 
@@ -43,7 +43,7 @@ cells.forEach((cell, index) => {
 
             // Check for a win or a draw
            if (checkWin()) {
-            const winnerName = currentPlayer === 'X' ? player1Name : player2Name;
+            const winnerName = currentPlayer === 'x' ? player1Name : player2Name;
 messageDiv.textContent = `${winnerName}, congratulations you won!`;
             gameActive = false;
             cells.forEach(cell => cell.style.pointerEvents = 'none');
@@ -55,8 +55,8 @@ messageDiv.textContent = `${winnerName}, congratulations you won!`;
 			   
 		   }else {
                 // Switch players
-                currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
-                messageDiv.textContent = `${currentPlayer === 'X' ? player1Name : player2Name}, you're up!`;
+                currentPlayer = currentPlayer === 'x' ? 'o' : 'x';
+                messageDiv.textContent = `${currentPlayer === 'x' ? player1Name : player2Name}, you're up!`;
             }
         }
     });
@@ -97,7 +97,7 @@ restartButton.addEventListener('click', function() {
         cell.style.pointerEvents = 'auto';
     });
     // Reset turn
-    currentPlayer = 'X';
+    currentPlayer = 'x';
     gameActive = true;
     messageDiv.textContent = `${player1Name}, you're up!`;
     hideRestartButton();
