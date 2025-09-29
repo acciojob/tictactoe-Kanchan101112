@@ -44,7 +44,7 @@ cells.forEach((cell, index) => {
             // Check for a win or a draw
            if (checkWin()) {
             const winnerName = currentPlayer === 'X' ? player1Name : player2Name;
-messageDiv.textContent = `${winnerName}, congratulations you win! 🎉`;
+messageDiv.textContent = `${winnerName}, congratulations you won!`;
             gameActive = false;
             cells.forEach(cell => cell.style.pointerEvents = 'none');
             showRestartButton();
